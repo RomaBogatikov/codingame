@@ -7,7 +7,9 @@ import math
 l = int(input())
 n = int(input())
 
-
+# /////////////////////////////////
+# ///////MY SOLUTION///////////////
+# /////////////////////////////////
 
 # mergeSections()
 def mergeSections(previousSection, currentSection):
@@ -72,3 +74,23 @@ if len(finalResult) == 1 and start == 0 and end == l:
 
 # Write an answer using print
 # To debug: print("Debug messages...", file=sys.stderr)
+
+
+# /////////////////////////////////
+# ///////BEST SOLUTION/////////////
+# /////////////////////////////////
+
+painted = sorted([[int(j) for j in input().split()] for _ in range(n)], key=lambda x: x[0])
+print(painted)
+outp = []
+ce = 0
+for s, e in painted + [[l, l]]:
+    print(s, e)
+    if s > ce:
+        outp.append(f"{ce} {s}")
+        ce = e
+    else:
+        ce = max(ce, e)
+if len(outp) == 0:
+    outp = ["All painted"]
+print(*outp, sep="\n")
