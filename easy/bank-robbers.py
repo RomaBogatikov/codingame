@@ -13,32 +13,27 @@ for i in range(v):
     c, n = [int(j) for j in input().split()]
     vaultsArrayOfTuples.append((c, n, i))
 
-def countCombinations(accumulator, numTuple):
-    c, n, i = numTuple
+# function to count combinations
+def countCombinations(numTuple):
+    c, n, ind = numTuple
     combinationsForNumbers = 10 ** n
     combinationsForVowels = 5 ** (c-n)
-    totalNumberOfCombinations = combinationsForNumbers * combinationsForVowels * ( v // r + v % r)
-    # accumulator += totalNumberOfCombinations
-    if i % r == 0:
-        accumulator.append([totalNumberOfCombinations])
-    else:
-        accumulator[i // r].append(totalNumberOfCombinations)
+    totalNumberOfCombinations = combinationsForNumbers * combinationsForVowels
+    return (totalNumberOfCombinations, ind)
+
+combinationsArray = list(map(countCombinations, vaultsArrayOfTuples))
+
+# array of first r combinations
+initialArray = [combinationsArray[i] for i in range(r)]
+
+def reduceFinal(accumulator, currentValue):
+    combinations, ind = currentValue
+    if ind < r:
+        return accumulator
+    minValueInAccumulator = min(accumulator, key = lambda x: x[0])
+    accumulator[minValueInAccumulator[1]] = (minValueInAccumulator[0] + currentValue[0], minValueInAccumulator[1])
     return accumulator
 
-def countCombinationsMap(accumulator, numTuple):
-    c, n, i = numTuple
-    combinationsForNumbers = 10 ** n
-    combinationsForVowels = 5 ** (c-n)
-    totalNumberOfCombinations = combinationsForNumbers * combinationsForVowels * ( v // r + v % r)
-    return totalNumberOfCombinations
+finalResult = functools.reduce(reduceFinal, combinationsArray, initialArray)
 
-
-# mappedArray = list(map(countCombinationsMap,vaultsArrayOfTuples))
-reducedArray = functools.reduce(countCombinations, vaultsArrayOfTuples, [])
-result = functools.reduce(lambda accum, current: accum + max(current), reducedArray, 0)
-
-# print(mappedArray)
-# Write an answer using print
-# To debug: print("Debug messages...", file=sys.stderr)
-print(reducedArray)
-print(result)
+print(max(finalResult, key = lambda x: x[0])[0])
